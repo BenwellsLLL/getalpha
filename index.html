@@ -56,6 +56,7 @@
             font-weight: 500;
             font-size: 15px;
             transition: color 0.2s;
+            cursor: pointer;
         }
 
         .nav-links a:hover {
@@ -108,6 +109,7 @@
             color: #1d1d1f;
             font-size: 17px;
             border-bottom: 1px solid #e5e5e7;
+            cursor: pointer;
         }
 
         .overlay {
@@ -191,72 +193,110 @@
             color: #6e6e73;
         }
 
-        .two-column {
-            display: flex;
-            gap: 48px;
-            margin: 64px 0 40px;
-            align-items: flex-start;
+        .page {
+            display: none;
+            animation: fadeIn 0.3s ease;
         }
 
-        .feature-list {
-            flex: 1;
+        .page.active {
+            display: block;
         }
 
-        .feature-list h3 {
-            font-size: 18px;
-            font-weight: 600;
-            margin-bottom: 20px;
-            color: #1d1d1f;
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        .feature-list ul {
-            list-style: none;
-            padding: 0;
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin: 48px 0;
         }
 
-        .feature-list li {
-            padding: 10px 0;
-            border-bottom: 1px solid #e5e5e7;
-            color: #3a3a3e;
-            font-size: 15px;
+        .feature-card {
+            background: white;
+            border-radius: 18px;
+            padding: 22px;
+            transition: all 0.2s;
+            border: 1px solid #e5e5e7;
+        }
+
+        .feature-card:hover {
+            border-color: #0066cc;
+        }
+
+        .feature-icon {
+            width: 44px;
+            height: 44px;
+            margin-bottom: 16px;
             display: flex;
             align-items: center;
-            gap: 12px;
-        }
-
-        .feature-list li svg {
-            flex-shrink: 0;
-        }
-
-        .stats {
-            flex: 1;
+            justify-content: center;
             background: #f5f5f7;
-            border-radius: 24px;
-            padding: 28px;
+            border-radius: 12px;
         }
 
-        .stats h3 {
-            font-size: 18px;
+        .feature-card h3 {
+            font-size: 17px;
             font-weight: 600;
-            margin-bottom: 20px;
+            margin-bottom: 6px;
             color: #1d1d1f;
         }
 
-        .stat-item {
+        .feature-card p {
+            font-size: 13px;
+            color: #6e6e73;
+            line-height: 1.4;
+        }
+
+        .library-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin: 48px 0;
+        }
+
+        .library-item {
+            background: white;
+            border-radius: 18px;
+            padding: 20px 24px;
+            border: 1px solid #e5e5e7;
             display: flex;
             justify-content: space-between;
-            padding: 12px 0;
-            border-bottom: 1px solid #e5e5e7;
+            align-items: center;
+            transition: all 0.2s;
         }
 
-        .stat-label {
-            color: #6e6e73;
-            font-size: 14px;
+        .library-item:hover {
+            border-color: #0066cc;
         }
 
-        .stat-value {
+        .library-info h3 {
+            font-size: 18px;
             font-weight: 600;
+            margin-bottom: 4px;
             color: #1d1d1f;
+        }
+
+        .library-info p {
+            font-size: 13px;
+            color: #6e6e73;
+        }
+
+        .download-small {
+            background: #0066cc;
+            color: white;
+            padding: 8px 20px;
+            border-radius: 980px;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 500;
+            transition: background 0.2s;
+        }
+
+        .download-small:hover {
+            background: #0055aa;
         }
 
         .footer {
@@ -300,10 +340,10 @@
             .hero h1 { font-size: 36px; }
             .hero p { font-size: 16px; }
             .container { padding: 40px 20px; }
-            .two-column { flex-direction: column; gap: 32px; margin: 40px 0 24px; }
-            .stats { padding: 20px; }
             .download-btn { padding: 12px 24px; font-size: 14px; }
             .toast { white-space: normal; text-align: center; max-width: 85%; border-radius: 24px; }
+            .library-item { flex-direction: column; text-align: center; gap: 12px; }
+            .download-small { display: inline-block; }
         }
 
         @media (max-width: 480px) {
@@ -314,11 +354,12 @@
 <body>
     <nav class="navbar">
         <div class="nav-container">
-            <a href="#" class="logo">ALPHA</a>
+            <a href="#" class="logo" data-page="home">ALPHA</a>
             <div class="nav-links">
-                <a href="#">Home</a>
-                <a href="#features">Features</a>
-                <a href="#" class="nav-download" id="nav-download">Download</a>
+                <a data-page="home">Home</a>
+                <a data-page="features">Features</a>
+                <a data-page="library">Library</a>
+                <a class="nav-download" id="nav-download">Download</a>
             </div>
             <button class="menu-btn" id="menuBtn" aria-label="Menu">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -330,54 +371,119 @@
 
     <div class="mobile-menu" id="mobileMenu">
         <button class="close-btn" id="closeBtn">&times;</button>
-        <a href="#">Home</a>
-        <a href="#features">Features</a>
-        <a href="#" id="mobile-download">Download</a>
+        <a data-page="home">Home</a>
+        <a data-page="features">Features</a>
+        <a data-page="library">Library</a>
+        <a id="mobile-download">Download</a>
     </div>
     <div class="overlay" id="overlay"></div>
 
     <div class="container">
-        <div class="hero">
-            <h1>Smart learning, simplified.</h1>
-            <p>ALPHA helps you study smarter with spaced repetition, markdown reader, and progress tracking.</p>
-            <button class="download-btn" id="hero-download">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z" fill="currentColor"/>
-                </svg>
-                Download APK
-            </button>
-            <div class="version">Requires Android 8.0 or later</div>
+        <!-- Home Page -->
+        <div id="home-page" class="page active">
+            <div class="hero">
+                <h1>ALPHA</h1>
+                <p>Study app with markdown reader, spaced repetition, and offline support.</p>
+                <button class="download-btn" id="hero-download">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z" fill="currentColor"/>
+                    </svg>
+                    Download APK
+                </button>
+                <div class="version">Android 8.0 or later</div>
+            </div>
         </div>
 
-        <div class="two-column" id="features">
-            <div class="feature-list">
-                <h3>Key Features</h3>
-                <ul>
-                    <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 6h16v2H4V6zm2-4h12v2H6V2zm16 8H2v12h20V10zm-2 10H4v-8h16v8z" fill="#0066cc"/></svg>Markdown Reader with page-flip</li>
-                    <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 4c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm0 13c-2.33 0-4.31-1.46-5.11-3.5h10.22c-.8 2.04-2.78 3.5-5.11 3.5z" fill="#0066cc"/></svg>Spaced Repetition (SM-2)</li>
-                    <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm2 18H6V4h7v5h5v11z" fill="#0066cc"/></svg>Import from WhatsApp</li>
-                    <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z" fill="#0066cc"/></svg>Progress Tracking & Streaks</li>
-                    <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 22c5.52 0 10-4.48 10-10S17.52 2 12 2 2 6.48 2 12s4.48 10 10 10zm1-15h-2v6h2V7zm0 8h-2v2h2v-2z" fill="#0066cc"/></svg>Smart Notifications</li>
-                    <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 6h16v2H4V6zm2-4h12v2H6V2zm16 8H2v12h20V10zm-2 10H4v-8h16v8z" fill="#0066cc"/></svg>Course Management</li>
-                </ul>
+        <!-- Features Page -->
+        <div id="features-page" class="page">
+            <div class="features">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M4 6h16v2H4V6zm2-4h12v2H6V2zm16 8H2v12h20V10zm-2 10H4v-8h16v8z" fill="#1d1d1f"/>
+                        </svg>
+                    </div>
+                    <h3>Markdown Reader</h3>
+                    <p>Page-flip reading with LaTeX, tables, code highlighting, and embedded images.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 4c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm0 13c-2.33 0-4.31-1.46-5.11-3.5h10.22c-.8 2.04-2.78 3.5-5.11 3.5z" fill="#1d1d1f"/>
+                        </svg>
+                    </div>
+                    <h3>Spaced Repetition</h3>
+                    <p>SM-2 algorithm for optimal review timing.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm2 18H6V4h7v5h5v11z" fill="#1d1d1f"/>
+                        </svg>
+                    </div>
+                    <h3>Import from WhatsApp</h3>
+                    <p>Share .lucy or .zip files directly to ALPHA.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z" fill="#1d1d1f"/>
+                        </svg>
+                    </div>
+                    <h3>Progress Tracking</h3>
+                    <p>Streaks, consistency scores, weak topics, and daily goals.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 22c5.52 0 10-4.48 10-10S17.52 2 12 2 2 6.48 2 12s4.48 10 10 10zm1-15h-2v6h2V7zm0 8h-2v2h2v-2z" fill="#1d1d1f"/>
+                        </svg>
+                    </div>
+                    <h3>Smart Notifications</h3>
+                    <p>Daily reminders, inactivity nudges, and quiz alerts.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M4 6h16v2H4V6zm2-4h12v2H6V2zm16 8H2v12h20V10zm-2 10H4v-8h16v8z" fill="#1d1d1f"/>
+                        </svg>
+                    </div>
+                    <h3>Course Management</h3>
+                    <p>Pin courses, archive, color coding, and custom reordering.</p>
+                </div>
             </div>
-            <div class="stats">
-                <h3>Why Students Choose ALPHA</h3>
-                <div class="stat-item">
-                    <span class="stat-label">Active users</span>
-                    <span class="stat-value">40,000+</span>
+        </div>
+
+        <!-- Library Page -->
+        <div id="library-page" class="page">
+            <div class="library-list">
+                <div class="library-item">
+                    <div class="library-info">
+                        <h3>CSC 211: Introduction to Java</h3>
+                        <p>Java programming fundamentals course with 22 chapters and quiz</p>
+                    </div>
+                    <a href="courses/csc211.zip" class="download-small">Download Course</a>
                 </div>
-                <div class="stat-item">
-                    <span class="stat-label">Courses imported</span>
-                    <span class="stat-value">10,000+</span>
+                <div class="library-item">
+                    <div class="library-info">
+                        <h3>BIO 101: Cell Biology</h3>
+                        <p>Cell structure, mitosis, meiosis, and cellular processes</p>
+                    </div>
+                    <a href="#" class="download-small" id="bio-placeholder">Coming Soon</a>
                 </div>
-                <div class="stat-item">
-                    <span class="stat-label">Questions answered</span>
-                    <span class="stat-value">2M+</span>
+                <div class="library-item">
+                    <div class="library-info">
+                        <h3>MATH 201: Calculus I</h3>
+                        <p>Limits, derivatives, integrals, and applications</p>
+                    </div>
+                    <a href="#" class="download-small" id="math-placeholder">Coming Soon</a>
                 </div>
-                <div class="stat-item">
-                    <span class="stat-label">Average study streak</span>
-                    <span class="stat-value">12 days</span>
+                <div class="library-item">
+                    <div class="library-info">
+                        <h3>PHY 101: General Physics</h3>
+                        <p>Mechanics, thermodynamics, waves, and electricity</p>
+                    </div>
+                    <a href="#" class="download-small" id="phy-placeholder">Coming Soon</a>
                 </div>
             </div>
         </div>
@@ -388,7 +494,7 @@
         <p style="margin-top: 6px;">&copy; 2026 ALPHA. All rights reserved.</p>
     </div>
 
-    <div class="toast" id="toast">Coming soon — APK will be available here</div>
+    <div class="toast" id="toast">Coming soon</div>
 
     <script>
         const menuBtn = document.getElementById('menuBtn');
@@ -421,13 +527,42 @@
         closeBtn.addEventListener('click', closeMenu);
         overlay.addEventListener('click', closeMenu);
 
+        // Page navigation
+        function navigateTo(pageId) {
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+            document.getElementById(pageId + '-page').classList.add('active');
+            closeMenu();
+        }
+
+        document.querySelectorAll('[data-page]').forEach(el => {
+            el.addEventListener('click', (e) => {
+                e.preventDefault();
+                navigateTo(el.getAttribute('data-page'));
+            });
+        });
+
+        // Download buttons
         const downloadBtns = ['nav-download', 'hero-download', 'mobile-download'];
         downloadBtns.forEach(id => {
             const btn = document.getElementById(id);
             if (btn) {
                 btn.addEventListener('click', (e) => {
                     e.preventDefault();
-                    showToast('Coming soon — APK will be available here');
+                    showToast('APK will be available here');
+                });
+            }
+        });
+
+        // Placeholder course downloads
+        const placeholders = ['bio-placeholder', 'math-placeholder', 'phy-placeholder'];
+        placeholders.forEach(id => {
+            const el = document.getElementById(id);
+            if (el) {
+                el.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    showToast('Course coming soon');
                 });
             }
         });
@@ -435,7 +570,9 @@
         const mobileLinks = mobileMenu.querySelectorAll('a');
         mobileLinks.forEach(link => {
             link.addEventListener('click', () => {
-                closeMenu();
+                if (!link.id) {
+                    closeMenu();
+                }
             });
         });
     </script>
